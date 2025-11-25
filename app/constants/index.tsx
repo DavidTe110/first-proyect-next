@@ -1,0 +1,1 @@
+export const sessionStatusStorage = false as boolean
