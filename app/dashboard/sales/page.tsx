@@ -9,6 +9,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import SalesModal from "@/app/components/sales/salesModal";
 import ReadQR from "@/app/components/sales/readQr";
+import WithAuthProtect from "@/app/helpers/WithAuthProtect";
 
 interface Product {
     id?: string;
@@ -85,6 +86,7 @@ const Sales = () => {
     //   READ QR
     const handleScanQR = (qrValue: string) => {
         const product = products.find(p => p.id === qrValue);
+        const audio = new Audio('/beep.mp3')
 
         if (!product) {
             setSnackbarMessage("❌ Producto no encontrado");
@@ -97,6 +99,7 @@ const Sales = () => {
         handleAddCar(product);
 
         setSnackbarMessage(`✔ ${product.name} agregado por QR`);
+        audio.play();
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
     };
@@ -171,4 +174,5 @@ const Sales = () => {
     );
 };
 
-export default Sales;
+// export default Sales;
+export default WithAuthProtect(Sales);

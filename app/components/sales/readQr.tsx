@@ -31,7 +31,7 @@ const ReadQR: React.FC<ReadQRProps> = ({ open, onClose, onScan }) => {
             onScan(qrValue); // 🔥 ENVÍA EL QR AL PADRE
 
             // opcional: cerrar después del escaneo
-            onClose();
+            // onClose();
           },
           constraints: {
             video: { facingMode: "environment" }
