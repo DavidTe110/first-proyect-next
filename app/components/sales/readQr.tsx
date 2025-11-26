@@ -8,6 +8,7 @@ import {
   Button
 } from "@mui/material";
 
+
 interface ReadQRProps {
   open: boolean;
   onClose: () => void;

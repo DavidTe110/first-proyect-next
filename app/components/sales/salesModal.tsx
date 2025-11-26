@@ -13,6 +13,7 @@ import {
     IconButton,
     Button,
     TextField,
+    CircularProgress,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -36,9 +37,11 @@ interface Props {
     cart: CartItem[];
     setCart: (value: CartItem[]) => void;
     onClose: () => void;
+    onPurchase: () => void;
+    loadingSales: boolean;
 }
 
-const SalesModal = ({ open, cart, setCart, onClose }: Props) => {
+const SalesModal = ({ open, cart, setCart, onClose, onPurchase, loadingSales }: Props) => {
 
     const handleQuantity = (id: string, qty: number) => {
         if (qty < 1) return;
@@ -86,7 +89,7 @@ const SalesModal = ({ open, cart, setCart, onClose }: Props) => {
                                             size="small"
                                             value={item.quantity}
                                             onChange={(e) =>
-                                                handleQuantity(item.id??"", Number(e.target.value))
+                                                handleQuantity(item.id ?? "", Number(e.target.value))
                                             }
                                             inputProps={{ min: 1, className: "w-16" }}
                                         />
@@ -97,7 +100,7 @@ const SalesModal = ({ open, cart, setCart, onClose }: Props) => {
                                     </TableCell>
 
                                     <TableCell>
-                                        <IconButton color="error" onClick={() => handleDelete(item.id??"")}>
+                                        <IconButton color="error" onClick={() => handleDelete(item.id ?? "")}>
                                             <DeleteIcon />
                                         </IconButton>
                                     </TableCell>
@@ -114,9 +117,17 @@ const SalesModal = ({ open, cart, setCart, onClose }: Props) => {
                 </div>
 
                 <Button onClick={onClose}>Cerrar</Button>
-                <Button variant="contained" color="primary" disabled={cart.length === 0}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={cart.length === 0 || loadingSales}
+                    onClick={onPurchase}
+                    sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                >
                     Finalizar compra
+                    {loadingSales && <CircularProgress size={20} color="inherit" />}
                 </Button>
+
             </DialogActions>
         </Dialog>
     );
