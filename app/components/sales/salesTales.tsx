@@ -98,13 +98,7 @@ const SalesTable = ({ onAddCar, products, loadingProducts }: Props) => {
                       color={ p.stock > 0  ? "success" : "error"}
                       size="small"
                     />
-                    {/* <span
-                      className={`px-2 py-1 rounded text-white text-sm ${
-                        p.stock > 0 ? "bg-green-500" : "bg-red-500"
-                      }`}
-                    >
-                      {p.stock > 0 ? "Disponible" : "No disponible"}
-                    </span> */}
+
                   </TableCell>
 
                   <TableCell>
