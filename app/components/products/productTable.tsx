@@ -5,6 +5,7 @@ import {
   Table, TableHead, TableBody, TableRow, TableCell,
   TableContainer, Paper, Button, CircularProgress, Box,
   TextField, TablePagination, MenuItem,
+  Chip,
 
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
@@ -172,12 +173,17 @@ const ProductTable = ({
                   <TableCell>S/ {p.price}</TableCell>
                   <TableCell>{p.stock}</TableCell>
                   <TableCell>
-                    <span
+                     <Chip
+                      label={ p.stock > 0  ? "DISPONIBLE" : "NO DISPONIBLE"}
+                      color={ p.stock > 0  ? "success" : "error"}
+                      size="small"
+                    />
+                    {/* <span
                       className={`px-2 py-1 rounded text-white text-sm ${p.stock > 0 ? "bg-green-500" : "bg-red-500"
                         }`}
                     >
                       {p.stock > 0 ? "Disponible" : "No disponible"}
-                    </span>
+                    </span> */}
 
                   </TableCell>
                   <TableCell>{p.createdAt ? p.createdAt.toLocaleDateString() : "-"}</TableCell>

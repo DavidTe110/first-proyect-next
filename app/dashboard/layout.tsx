@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 import CategoryIcon from '@mui/icons-material/Category';
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
-
+import BarChartIcon from "@mui/icons-material/BarChart";
 const drawerWidth = 240;
 
 const LayoutDashboard = ({ children }: { children: React.ReactNode }) => {
@@ -150,6 +150,17 @@ const LayoutDashboard = ({ children }: { children: React.ReactNode }) => {
                 <ListItemIcon><PointOfSaleIcon /></ListItemIcon>
                 <ListItemText primary="Ventas" />
               </ListItemButton>
+
+
+              <ListItemButton
+                onClick={() => handleNavigation('/dashboard/sales-management')}
+                selected={pathname === '/dashboard/sales-management'}
+              >
+                <ListItemIcon><BarChartIcon /></ListItemIcon>
+                <ListItemText primary="Lista de ventas" />
+              </ListItemButton>
+
+
               {userRole === "Admin" && (
                 <ListItemButton
                   onClick={() => handleNavigation('/dashboard/users')}

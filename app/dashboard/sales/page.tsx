@@ -121,100 +121,181 @@ const Sales = () => {
         return `s-${shortUuid}`;
     };
 
-    const handlePurchase = async () => {
-        try {
-            if (!currentUser) {
-                setSnackbarMessage("❌ No estás autenticado");
-                setSnackbarSeverity("error");
-                setSnackbarOpen(true);
-                return;
-            }
+    // const handlePurchase = async () => {
+    //     try {
+    //         if (!currentUser) {
+    //             setSnackbarMessage("❌ No estás autenticado");
+    //             setSnackbarSeverity("error");
+    //             setSnackbarOpen(true);
+    //             return;
+    //         }
 
-            if (cart.length === 0) {
-                setSnackbarMessage("❌ El carrito está vacío");
-                setSnackbarSeverity("error");
-                setSnackbarOpen(true);
-                return;
-            }
-            setLoadingSales(true)
+    //         if (cart.length === 0) {
+    //             setSnackbarMessage("❌ El carrito está vacío");
+    //             setSnackbarSeverity("error");
+    //             setSnackbarOpen(true);
+    //             return;
+    //         }
+    //         setLoadingSales(true)
 
-            const totalAmount = cart.reduce(
-                (acc, item) => acc + item.price * item.quantity,
-                0
-            );
+    //         const totalAmount = cart.reduce(
+    //             (acc, item) => acc + item.price * item.quantity,
+    //             0
+    //         );
 
-            // ==============================
-            // 1. Crear la venta principal
-            // ==============================
-            const saleRef = await addDoc(collection(db, "sales"), {
-                totalAmount,
-                items: cart.map(item => ({
-                    productId: item.id,
-                    quantity: item.quantity,
-                    price: item.price,
-                })),
-                createdAt: serverTimestamp(),
-                // createdBy: currentUser.uid,
-            });
+    //         // ==============================
+    //         // 1. Crear la venta principal
+    //         // ==============================
+    //         const saleRef = await addDoc(collection(db, "sales"), {
+    //             totalAmount,
+    //             items: cart.map(item => ({
+    //                 productId: item.id,
+    //                 quantity: item.quantity,
+    //                 price: item.price,
+    //                  createdById: currentUser.uid,
+    //             createdByEmail: currentUser.email,
+    //             })),
+    //             createdAt: serverTimestamp(),
+    //             // createdBy: currentUser.uid,
+    //         });
 
-            const saleId = saleRef.id;
+    //         const saleId = saleRef.id;
 
-            // ==============================
-            // 2. Crear SOLO UN detalle por venta
-            // ==============================
-            await addDoc(collection(db, "salesDetails"), {
-                saleId,
-                // items: cart.map(item => ({
-                //     productId: item.id,
-                //     quantity: item.quantity,
-                //     price: item.price,
-                // })),
-                createdAt: serverTimestamp(),
-                createdById: currentUser.uid,
-                createdByEmail: currentUser.email,
-                updatedBy: null,
-                deletedBy: null,
-            });
+    //         // ==============================
+    //         // 2. Crear SOLO UN detalle por venta
+    //         // ==============================
+    //         await addDoc(collection(db, "sales-details"), {
+    //             saleId,
+    //             // items: cart.map(item => ({
+    //             //     productId: item.id,
+    //             //     quantity: item.quantity,
+    //             //     price: item.price,
+    //             // })),
+    //             createdAt: serverTimestamp(),
+    //             createdById: currentUser.uid,
+    //             createdByEmail: currentUser.email,
+    //             // updatedBy: null,
+    //             // deletedBy: null,
+    //         });
 
-            // ==============================
-            // Crear boleta imprimible (ticket)
-            // ==============================
-            const ticketId = generateShortTicketId();
+    //         // ==============================
+    //         // Crear boleta imprimible (ticket)
+    //         // ==============================
+    //         const ticketId = generateShortTicketId();
 
-            const printableItems = cart.map(item => ({
-                name: item.name,
-                quantity: item.quantity,
-                price: item.price,
-                subtotal: item.quantity * item.price,
-            }));
+    //         const printableItems = cart.map(item => ({
+    //             name: item.name,
+    //             quantity: item.quantity,
+    //             price: item.price,
+    //             subtotal: item.quantity * item.price,
+    //         }));
 
-            await setDoc(doc(db, "tickets", ticketId), {
-                ticketId,
-                saleId,
-                items: printableItems,
-                totalAmount,
-                createdAt: serverTimestamp(),
-            });
+    //         await setDoc(doc(db, "tickets", ticketId), {
+    //             ticketId,
+    //             saleId,
+    //             items: printableItems,
+    //             totalAmount,
+    //             createdAt: serverTimestamp(),
+    //         });
 
-            // ==============================
-            // 3. Limpieza + mensaje
-            // ==============================
-            setCart([]);
-            setOpenCartModal(false);
-            setLoadingSales(false)
+    //         // ==============================
+    //         // 3. Limpieza + mensaje
+    //         // ==============================
+    //         setCart([]);
+    //         setOpenCartModal(false);
+    //         setLoadingSales(false)
 
-            setSnackbarMessage("✔ Venta registrada correctamente");
-            setSnackbarSeverity("success");
-            setSnackbarOpen(true);
+    //         setSnackbarMessage("✔ Venta registrada correctamente");
+    //         setSnackbarSeverity("success");
+    //         setSnackbarOpen(true);
 
-        } catch (error) {
-            console.error(error);
-            setSnackbarMessage("❌ Error al registrar la venta");
+    //     } catch (error) {
+    //         console.error(error);
+    //         setSnackbarMessage("❌ Error al registrar la venta");
+    //         setSnackbarSeverity("error");
+    //         setSnackbarOpen(true);
+    //     }
+    // };
+
+const handlePurchase = async () => {
+    try {
+        if (!currentUser) {
+            setSnackbarMessage("❌ No estás autenticado");
             setSnackbarSeverity("error");
             setSnackbarOpen(true);
+            return;
         }
-    };
 
+        if (cart.length === 0) {
+            setSnackbarMessage("❌ El carrito está vacío");
+            setSnackbarSeverity("error");
+            setSnackbarOpen(true);
+            return;
+        }
+
+        setLoadingSales(true);
+
+        // Total
+        const totalAmount = cart.reduce(
+            (acc, item) => acc + item.price * item.quantity,
+            0
+        );
+
+        // Items imprimibles
+        const printableItems = cart.map(item => ({
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+            subtotal: item.quantity * item.price,
+        }));
+
+        // Generar ticket ID corto
+        const ticketId = generateShortTicketId();
+
+        // ===============================
+        // 1. GUARDAR TODO EN SALES
+        // ===============================
+        const saleRef = await addDoc(collection(db, "sales"), {
+            items: printableItems,               // productos completos
+            totalAmount,
+            createdAt: serverTimestamp(),
+            createdByEmail: currentUser.email,
+            createdById: currentUser.uid,
+            ticketId,                            // vinculado directo
+        });
+
+        const saleId = saleRef.id;
+
+        // ===============================
+        // 2. CREAR EL TICKET IMPRESO
+        // ===============================
+        await setDoc(doc(db, "tickets", ticketId), {
+            ticketId,
+            saleId,
+            items: printableItems,
+            totalAmount,
+            createdAt: serverTimestamp(),
+            createdByEmail: currentUser.email,
+        });
+
+        // ===============================
+        // 3. Limpiar UI
+        // ===============================
+        setCart([]);
+        setOpenCartModal(false);
+        setLoadingSales(false);
+
+        setSnackbarMessage("✔ Venta registrada correctamente");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+
+    } catch (error) {
+        console.error(error);
+        setSnackbarMessage("❌ Error al registrar la venta");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+    }
+};
 
     return (
         <>

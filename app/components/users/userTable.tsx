@@ -14,16 +14,17 @@ import {
     CircularProgress,
     Box,
     TextField,
-    TablePagination
+    TablePagination,
+    Chip
 } from "@mui/material";
 
 export interface User {
     id: string;
     email: string;
-    name:string;
+    name: string;
     role: "Empleado" | "Admin";
     status: boolean; // true = activo, false = no activo
-    active:boolean
+    active: boolean
 }
 interface Props {
     users: User[];
@@ -67,8 +68,8 @@ const UserTable = ({ users, loading, onEdit, onDelete }: Props) => {
             {/* Tabla */}
             <TableContainer>
                 <Table>
-                    <TableHead>
-                        <TableRow sx={{ backgroundColor: "#e1eaff" }}>
+                    <TableHead className="bg-blue-100">
+                        <TableRow >
                             <TableCell sx={{ fontWeight: "bold" }}>Nombre</TableCell>
                             <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
                             <TableCell sx={{ fontWeight: "bold" }}>Rol</TableCell>
@@ -90,20 +91,30 @@ const UserTable = ({ users, loading, onEdit, onDelete }: Props) => {
                                     <TableCell>{u.name}</TableCell>
                                     <TableCell>{u.email}</TableCell>
                                     <TableCell>
-                                        <span
+                                        {/* <span
                                             className={`px-2 py-1 rounded text-white text-sm ${u.role === "Admin" ? "bg-orange-600" : "bg-green-500"
                                                 }`}
                                         >
                                             {u.role}
-                                        </span>
+                                        </span> */}
+                                        <Chip
+                                            label={u.role === "Admin" ? "ADMIN" : "EMPLEADO"}
+                                            color={u.role === "Admin" ? "success" : "info"}
+                                            size="small"
+                                        />
                                     </TableCell>
                                     <TableCell>
-                                        <span
+                                        <Chip
+                                            label={u.status  ? "ACTIVO" : "NO ACTIVO"}
+                                            color={u.status ?  "success" : "error"}
+                                            size="small"
+                                        />
+                                        {/* <span
                                             className={`px-2 py-1 rounded text-white text-sm ${u.status ? "bg-green-500" : "bg-gray-500"
                                                 }`}
                                         >
                                             {u.status ? "Activo" : "No activo"}
-                                        </span>
+                                        </span> */}
                                     </TableCell>
                                     <TableCell align="center">
                                         <Box className="flex flex-wrap gap-3 mb-4 justify-center">
@@ -117,7 +128,7 @@ const UserTable = ({ users, loading, onEdit, onDelete }: Props) => {
                                                 Editar
                                             </Button>
                                             <Button variant="contained" size="small" color="error"
-                                                onClick={()=>onDelete(u)}
+                                                onClick={() => onDelete(u)}
                                                 startIcon={<EditIcon />}
 
                                             >Eliminar</Button>

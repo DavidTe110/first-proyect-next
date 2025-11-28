@@ -44,6 +44,7 @@ const QRModal = ({ open, value, title = "Código QR", onClose }:QRModalProps) =>
 
       const link = document.createElement("a");
       link.download = "qr-code.png";
+      link.download = `${title}.png`;
       link.href = dataUrl;
       link.click();
     } catch (error) {
